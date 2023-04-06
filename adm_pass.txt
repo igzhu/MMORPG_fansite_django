@@ -1,0 +1,2 @@
+name - adm
+pass- fan_site_pass
