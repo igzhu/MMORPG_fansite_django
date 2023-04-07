@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 import random
 from datetime import datetime
-from .models import Message, Member, Post, OneTimeCode
+from .models import Message, Post, OneTimeCode
 from .forms import MessageForm
 
 
@@ -13,7 +13,7 @@ class MessageList(ListView):
     model = Message
     template_name = 'messages.html'
     context_object_name = 'messages'
-    queryset = Message.objects.order_by('-messsgeDateTime')
+    queryset = Message.objects.order_by('-messsageDateTime')
     paginate_by = 11
 
     def get_context_data(self, **kwargs):

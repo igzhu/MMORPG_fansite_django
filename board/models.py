@@ -2,15 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Member(models.Model):
-    memberName = models.OneToOneField(User, on_delete=models.CASCADE)
+# class Member(models.Model):
+#    memberName = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f'{self.memberName.username}'
+#    def __str__(self):
+#        return f'{self.memberName.username}'
 
-    def count_members(self):
-        members_total = self.objects.all().count()
-        return members_total
+#    def count_members(self):
+#        members_total = self.objects.all().count()
+#        return members_total
 
 
 tank = 'TANK'
@@ -37,7 +37,7 @@ msg_types = [(tank, 'танки'), (healer, 'лекари'), (damage_dealer, 'в
 #     return os.path.join(settings.LOCAL_FILE_DIR, 'videos')
 
 class Message(models.Model):
-    author = models.ForeignKey(Member, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     messageDateTime = models.DateTimeField(auto_now_add=True)
     messageTitle = models.CharField(max_length=50)
     messageText = models.TextField()
@@ -59,8 +59,8 @@ class Message(models.Model):
 
 
 class Post(models.Model):
-    messageAuthor = models.ForeignKey(Member, on_delete=models.CASCADE)
-    postAuthor = models.ForeignKey(Member, on_delete=models.CASCADE)
+    messageAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
+    postAuthor = models.ForeignKey(User, on_delete=models.CASCADE)
     postToMessage = models.ForeignKey(Message, on_delete=models.CASCADE)
     postText = models.TextField()
     postAccepted = models.BooleanField(default=False)

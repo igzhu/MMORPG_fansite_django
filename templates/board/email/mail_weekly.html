@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load news_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This week new messages!</title>
+</head>
+<body>
+    <h2>Здравствуйте! Новые публикации за 7 дней:</h2>
+    <hr>
+    {% for msg in messages_in_week %}
+        <p> <strong>Автор - {{ msg.author.username }}</strong></p>
+        <a href="http://127.0.0.1:8000{% url 'message_details' msg.id %}">
+            <h3>{{ msg.messageTitle|truncatewords:12 }}</h3>
+        </a>
+        <hr>
+    {% endfor %}
+</body>
+</html>
