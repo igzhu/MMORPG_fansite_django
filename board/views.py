@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.template.loader import render_to_string
+from django.core.mail.message import EmailMultiAlternatives
 import random
 from datetime import datetime
 from .models import Message, Post, OneTimeCode
 from .forms import MessageForm
 
+DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
 
 class MessageList(ListView):
     model = Message
@@ -28,11 +31,6 @@ class MessageList(ListView):
 class MessageDetails(DetailView):
     template_name = 'board/message_detail.html'
     queryset = Message.objects.all()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['is_logged'] = self.request.user.id
-        return context
 
 
 class MessageAdd(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -94,12 +92,12 @@ class MessageAdd(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
                     msg.send()
         '''  # этот кусок кода - альтернатива email by signal - рабочий !!!
 
-        return redirect('/posts/')
+        return redirect('')
 
 
 class MessageEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = ('board.change_message',)
-    template_name = 'board/message_edit.html'
+    # permission_required = ('board.change_message',)
+    template_name = 'board/message_addt.html'
     form_class = MessageForm
 
     def get_object(self, **kwargs):
@@ -108,10 +106,10 @@ class MessageEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 
 class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
-    permission_required = ('board.delete_message',)
+    # permission_required = ('board.delete_message',)
     template_name = 'board/message_delete.html'
     queryset = Message.objects.all()
-    success_url = '/messages/'
+    success_url = ''
 
 
 class PostList(LoginRequiredMixin, ListView):
@@ -129,6 +127,7 @@ class PostList(LoginRequiredMixin, ListView):
         context['psts_total'] = Post.count_posts()
         return context
 
+
 class PostDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = ('board.delete_post',)
     template_name = 'board/message_delete.html'
@@ -143,13 +142,20 @@ class UserRegister(CreateView):
 
 @login_required
 def respond_to_message(request, pk):
-    user = request.user
     msg = Message.objects.get(id=pk)
+    messageAuthor = msg.user
+    postAuthor = request.user
+    postToMessage = msg
+    postText = request.POST['response']
+
+    resp = Postt(messageAuthor=messageAuthor, postAuthor=postAuthor, postToMessage=postToMessage, postText=postText)
+    resp.save()
+
     email = msg.author.email
     html = render_to_string(
           'board/email/response_submitted.html',
-          {'msg': category,
-           "by_user": user}
+          {'msg': msg.messageTitle,
+           "by_user": messageAuthor.username}
           )
     msg = EmailMultiAlternatives(
         subject=f'response to {msg.messageTitle}',

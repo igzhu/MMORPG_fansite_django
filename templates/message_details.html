@@ -100,6 +100,7 @@
         </header>
         <!-- Modal body -->
         <form class="text-sm text-gray-700 dark:text-gray-400" action="<a href="{% url 'respond' message.id %}"" method="POST">
+          {% csrf_token %}
           <div class="mt-4 mb-6">
             <!-- Modal title -->
             <p
@@ -109,7 +110,7 @@
             </p>
           <!-- Modal description -->
               <label for="rsp"> ваш отклик:</label>
-              <input type="text" id="rsp" name="responce" maxlength="200" required>
+              <input type="text" id="rsp" name="response" maxlength="200" required>
           </div>
           <footer
             class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800"
