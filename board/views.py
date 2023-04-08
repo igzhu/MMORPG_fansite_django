@@ -12,6 +12,7 @@ from .forms import MessageForm
 
 DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
 
+
 class MessageList(ListView):
     model = Message
     template_name = 'messages.html'
@@ -21,7 +22,6 @@ class MessageList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_logged'] = self.request.user.id
         context['msgs_total'] = Message.count_publications()
         context['membs_total'] = Member.count_members()
         context['psts_total'] = Post.count_posts()
@@ -29,75 +29,25 @@ class MessageList(ListView):
 
 
 class MessageDetails(DetailView):
-    template_name = 'board/message_detail.html'
+    template_name = 'message_detail.html'
     queryset = Message.objects.all()
 
 
 class MessageAdd(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    # permission_required = ('news.add_post',)
-    template_name = 'board/message_add.html'
+    # permission_required = ('board.add_message',)
+    template_name = 'message_add.html'
     form_class = MessageForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = MessageForm()
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['form'] = MessageForm()
+    #     return context
 
-    def post(self, *args, **kwargs):
-        form = self.form_class(self.request.POST)
-
-        if form.is_valid():
-            #user = self.request.user
-            #post = form.save(commit=False)
-            #current_author = Author.objects.get_or_create(authorName=user)[0]
-            #post.postAuthor = current_author
-            form.save()
-            # return self.form.valid(form)
-        '''  # этот кусок кода -альтернатива email by signal - рабочий !!!:
-        user = self.request.user
-        #post = form.save(commit=False)
-
-        time_now = datetime.now().date()
-        posts_in_current_date = Post.objects.filter(postAuthor=current_author, postDatetime__date=time_now).count()
-        if posts_in_current_date >= 3:
-            messages.error(request, "Превышен лимит 3 поста в сутки !")
-            return redirect('/posts/')
-
-        if form.is_valid():
-            #form.fields['postAuthor'] = current_author
-            post = form.save(commit=False)
-            post.postAuthor = current_author
-            form.save()
-            header = form.cleaned_data.get("head")
-            txt = form.cleaned_data.get('postText')  # .[:51]
-            ctgries = form.cleaned_data.get("category")
-            for ctgr in ctgries:
-                categ = Category.objects.get(name=ctgr.name)
-                cat_users = categ.subscribers.all()
-                for usr in cat_users:
-                    html_content = render_to_string('news/mail_in_category.html',
-                       {'headr': header,
-                        'catgor': categ.name,
-                        'text': txt,
-                        'nam': usr.username,
-                        'e_mail': usr.email, }
-                    )
-                    msg = EmailMultiAlternatives(
-                        subject=header,
-                        body=txt[:51],
-                        from_email=DEFAULT_FROM_EMAIL,
-                        to=[usr.email, ]
-                    )
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
-        '''  # этот кусок кода - альтернатива email by signal - рабочий !!!
-
-        return redirect('')
 
 
 class MessageEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     # permission_required = ('board.change_message',)
-    template_name = 'board/message_addt.html'
+    template_name = 'message_add.html'
     form_class = MessageForm
 
     def get_object(self, **kwargs):
@@ -107,7 +57,7 @@ class MessageEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 class MessageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     # permission_required = ('board.delete_message',)
-    template_name = 'board/message_delete.html'
+    template_name = 'message_delete.html'
     queryset = Message.objects.all()
     success_url = ''
 
