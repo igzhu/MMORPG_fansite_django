@@ -142,30 +142,28 @@ class UserRegister(CreateView):
     success_url = '/'
 
 @login_required
-def respond(request, pk):
+def respond_to_message(request, pk):
     user = request.user
-    category = Category.objects.get(id=pk)
-    if not category.subscribers.filter(id=user.id).exists():
-        category.subscribers.add(user)
-        email = user.email
-        html = render_to_string(
-            'news/mail_subscribe.html',
-            {'categry': category,
-             "user": user}
-        )
-        msg = EmailMultiAlternatives(
-            subject=f'{category} subscription',
-            body='You are subscribed.',
-            from_email=DEFAULT_FROM_EMAIL,
-            to=[email, ]
-        )
+    msg = Message.objects.get(id=pk)
+    email = msg.author.email
+    html = render_to_string(
+          'board/email/response_submitted.html',
+          {'msg': category,
+           "by_user": user}
+          )
+    msg = EmailMultiAlternatives(
+        subject=f'response to {msg.messageTitle}',
+        body=f'You have a response to {msg.messageTitle}',
+        from_email=DEFAULT_FROM_EMAIL,
+        to=[email, ]
+    )
 
-        msg.attach_alternative(html, 'text/html')
-        try:
-            msg.send()
-        except Exception as e:
-            print(e)
-            return redirect('/posts/')
+    msg.attach_alternative(html, 'text/html')
+    try:
+        msg.send()
+    except Exception as e:
+        print(e)
+        return redirect('')
     return redirect(request.META.get('HTTP_REFERER'))
 
 def usual_login_view(request):
