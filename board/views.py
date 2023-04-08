@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.core.paginator import Paginator
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
@@ -9,6 +10,7 @@ from django.core.mail.message import EmailMultiAlternatives
 import random
 from datetime import datetime
 from .models import Message, Post, OneTimeCode
+from .filters import PostFilter
 from .forms import MessageForm
 
 DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
@@ -77,6 +79,7 @@ class PostList(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
         context['msgs_total'] = Message.count_publications()
         context['membs_total'] = Member.count_members()
         context['psts_total'] = Post.count_posts()
@@ -85,9 +88,9 @@ class PostList(LoginRequiredMixin, ListView):
 
 class PostDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = ('board.delete_post',)
-    template_name = 'board/message_delete.html'
-    queryset = Message.objects.all()
-    success_url = 'messages/'
+    template_name = 'post_delete.html'
+    queryset = Post.objects.all()
+    success_url = 'posts/'
 
 
 
