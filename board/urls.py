@@ -11,6 +11,7 @@ urlpatterns = [
     path('<int:pk>/delete/', MessageDelete.as_view(), name='message_delete'),
     path('<int:pk>/edit/', MessageEdit.as_view(), name='message_edit'),
     path('posts/', PostList.as_view(), name='post_list'),
+    path('posts/<int:pk>/', PostDetails.as_view(), name='post_details'),
     path('posts/<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
     path('posts/<int:pk>/approve/', PostApprove.as_view(), name='post_approve'),
     path('<int:pk>/respond/', respond_to_message, name='respond'),

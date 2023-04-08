@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -66,12 +67,16 @@ class PostList(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'posts.html'
     context_object_name = 'posts'
-    queryset = Post.objects.filter(author=request.user).order_by('-postDateTime')
+    # queryset = Post.objects.filter(author=request.user).order_by('-postDateTime')
     paginate_by = 11
+
+    def get_queryset(self, request):
+        user = self.request.user
+        queryset = super().get_queryset().filter(author=user).order_by('-postDateTime')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_logged'] = self.request.user.id
         context['msgs_total'] = Message.count_publications()
         context['membs_total'] = Member.count_members()
         context['psts_total'] = Post.count_posts()
@@ -82,13 +87,9 @@ class PostDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = ('board.delete_post',)
     template_name = 'board/message_delete.html'
     queryset = Message.objects.all()
-    success_url = '/messages/'
+    success_url = 'messages/'
 
 
-class UserRegister(CreateView):
-    model = User
-    form_class = BaseRegisterForm
-    success_url = '/'
 
 @login_required
 def respond_to_message(request, pk):
@@ -98,7 +99,7 @@ def respond_to_message(request, pk):
     postToMessage = msg
     postText = request.POST['response']
 
-    resp = Postt(messageAuthor=messageAuthor, postAuthor=postAuthor, postToMessage=postToMessage, postText=postText)
+    resp = Post(messageAuthor=messageAuthor, postAuthor=postAuthor, postToMessage=postToMessage, postText=postText)
     resp.save()
 
     email = msg.author.email

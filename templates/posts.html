@@ -1,7 +1,7 @@
 {% extends 'flatpages/default.html' %}
- 
+
 {% block title %}
-Публикации
+posts on my messages
 {% endblock title %}
 
 {% block content %}
@@ -100,31 +100,29 @@
             <!-- New Table -->
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
               <div class="w-full overflow-x-auto">
-                {% if messages %}
+                {% if posts %}
                 <table class="w-full whitespace-no-wrap">
                   <thead>
                     <tr
                       class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                     >
-                      <th class="px-4 py-3">Заголовок</th>
+                      <th class="px-4 py-3">Отклик на сообщение</th>
                       <th class="px-4 py-3">Дата</th>
-                      <th class="px-4 py-3">Автор</th>
-                      <th class="px-4 py-3">Текст</th>
-                      <th class="px-4 py-3">Категория</th>
+                      <th class="px-4 py-3">Автор отклика</th>
+                      <th class="px-4 py-3">Текст отклика</th>
+                      <th class="px-4 py-3">Одобрено</th>
                     </tr>
                   </thead>
                   <tbody
                     class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
                   >
-                  {% for msg in messages %}
+                  {% for pst in posts %}
                     <tr class="text-gray-700 dark:text-gray-400">
                       <td class="px-4 py-3 text-sm">
-                        <a href="{% url 'message_details' msg.id %}">{{ msg.messageTitle|truncatewords:12 }}</a>
-                        <a href="{% url 'message_edit' msg.id %}"><u>Редактировать</u></a>
-                        <a href="{% url 'message_delete' msg.id %}"><u>Удалить</u></a>
+                        {{pst.postToMessage.messageTitle|truncatechars:30 }}...
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ msg.messsgeDateTime|date:'d M Y' }}
+                        {{ pst.postDateTime|date:'d M Y' }}
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex items-center text-sm">
@@ -142,22 +140,23 @@
                             ></div>
                           </div>
                           <div>
-                            <p class="font-semibold">{{{ msg.author.username }}</p>
+                            <p class="font-semibold">{{{ pst.postAuthor.username }}</p>
                           </div>
                         </div>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ msg.messageText|truncatewords:20 }}
+                        <a href="{% url 'post_details' pst.id %}">{{ pst.postText|truncatewords:20 }}</a>
+                        <a href="{% url 'pst_delete' pst.id %}"><u>Удалить</u></a>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ msg.get_messageCategory_display() }}
+                        {{ pst.postAccepted }}
                       </td>
                     </tr>
                   {% endfor %}
                   </tbody>
                 </table>
                 {% else %}
-                  <h3>Сообщений нет!</h3>
+                  <h3>Откликов нет!</h3>
                 {% endif %}
               </div>
               <div
