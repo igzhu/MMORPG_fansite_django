@@ -141,7 +141,32 @@ class UserRegister(CreateView):
     form_class = BaseRegisterForm
     success_url = '/'
 
+@login_required
+def respond(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    if not category.subscribers.filter(id=user.id).exists():
+        category.subscribers.add(user)
+        email = user.email
+        html = render_to_string(
+            'news/mail_subscribe.html',
+            {'categry': category,
+             "user": user}
+        )
+        msg = EmailMultiAlternatives(
+            subject=f'{category} subscription',
+            body='You are subscribed.',
+            from_email=DEFAULT_FROM_EMAIL,
+            to=[email, ]
+        )
 
+        msg.attach_alternative(html, 'text/html')
+        try:
+            msg.send()
+        except Exception as e:
+            print(e)
+            return redirect('/posts/')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 def usual_login_view(request):
     username = request.POST['username']

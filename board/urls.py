@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MessageList, MessageDetails, MessageAdd, PostAdd, ResponcesList
+from .views import MessageList, MessageDetails, MessageAdd
 # from .views import upgrade_me_to_author, subscribe_to_category
 
 #app_name = 'news'
@@ -13,7 +13,7 @@ urlpatterns = [
     path('posts/', PostList.as_view(), name='post_list'),
     path('posts/<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
     path('posts/<int:pk>/approve/', PostApprove.as_view(), name='post_approve'),
-    #path('upgrade/', upgrade_me_to_author, name='upgrade'),
+    path('<int:pk>/respond/', respond_to_message, name='respond'),
     #path('category/<int:pk>/subscribe/', subscribe_to_category, name='subscribe'),
     #path('category/<int:pk>/', PostCategoryView.as_view(), name='category'),
 ]

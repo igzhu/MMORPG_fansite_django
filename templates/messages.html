@@ -1,11 +1,11 @@
 {% extends 'flatpages/default.html' %}
  
 {% block title %}
-пубикации
+Публикации
 {% endblock title %}
 
 {% block content %}
-<main class="h-full overflow-y-auto">
+        <main class="h-full overflow-y-auto">
           <div class="container px-6 mx-auto grid">
             <h2
               class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
@@ -100,6 +100,7 @@
             <!-- New Table -->
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
               <div class="w-full overflow-x-auto">
+                {% if messages %}
                 <table class="w-full whitespace-no-wrap">
                   <thead>
                     <tr
@@ -112,28 +113,18 @@
                       <th class="px-4 py-3">Категория</th>
                     </tr>
                   </thead>
-
-                  {% if messages %}
-                  {% for msg in messages %}
-                  {% block tabl_title %}}
-             <a href="{% url 'message_details' msg.id %}">{{ msg.messageTitle|truncatewords:12 }}</a>
-                  {% endblock tabl_title %}
-         {% block tabl_date %} {{ msg.messsgeDateTime|date:'d M Y' }} {% endblock tabl_date %}
-         {% block tabl_author %} {{ msg.author }} {% endblock tabl_author %}
-         {% block tabl_text %} {{ msg.messageText|truncatewords:20 }} {% endblock tabl_text %}
-         {% block tabl_category %} {{ msg.get_messageCategory_display() }} {% endblock tabl_category %}
-     {% endfor %}
-{% endif %}
-
                   <tbody
                     class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
                   >
+                  {% for msg in messages %}
                     <tr class="text-gray-700 dark:text-gray-400">
                       <td class="px-4 py-3 text-sm">
-                        {% block tabl_title %} {% endblock tabl_title %}
+                        <a href="{% url 'message_details' msg.id %}">{{ msg.messageTitle|truncatewords:12 }}</a>
+                        <a href="{% url 'message_edit' msg.id %}"><u>Редактировать</u></a>
+                        <a href="{% url 'message_delete' msg.id %}"><u>Удалить</u></a>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {% block tabl_date %} {% endblock tabl_date %}
+                        {{ msg.messsgeDateTime|date:'d M Y' }}
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex items-center text-sm">
@@ -151,19 +142,23 @@
                             ></div>
                           </div>
                           <div>
-                            <p class="font-semibold">{% block tabl_author %}{% endblock tabl_author %}</p>
+                            <p class="font-semibold">{{{ msg.author }}</p>
                           </div>
                         </div>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {% block tabl_text %} {% endblock tabl_text %}
+                        {{ msg.messageText|truncatewords:20 }}
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {% block tabl_category %} {% endblock tabl_category %}
+                        {{ msg.get_messageCategory_display() }}
                       </td>
                     </tr>
+                  {% endfor %}
                   </tbody>
                 </table>
+                {% else %}
+                  <h3>Сообщений нет!</h3>
+                {% endif %}
               </div>
               <div
                 class="grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800"
@@ -173,7 +168,23 @@
                 <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                   <nav aria-label="Table navigation">
                     <div class="inline-flex items-center">
-                      {% block pagination %}{% endblock pagination %}
+                      {% if is_paginated %}
+                        {% if page_obj.has_previous %}
+                          <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="First" href="?page=1">First</a>
+                          <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Previous" href="?page={{ page_obj.previous_page_number }}"><<<</a>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                          {% if page_obj.number == num %}
+                            <a class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">{{ num }}</a>
+                          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" href="?page={{ num }}">{{ num }}</a>
+                          {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                          <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Next" href="?page={{ page_obj.next_page_number }}">>>></a>
+                          <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Last" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                        {% endif %}
+                      {% endif %}
                     </div>div>
                   </nav>
                 </span>
@@ -181,47 +192,4 @@
             </div>
           </div>
         </main>
-
-
-
 {% endblock content %}
-
-
-
-
-{% if messages %}
-     {% for msg in messages %}
-         {% block tabl_title %}}
-             <a href="{% url 'message_details' msg.id %}">{{ msg.messageTitle|truncatewords:12 }}</a>
-         {% endblock tabl_title %}
-         {% block tabl_date %} {{ msg.messsgeDateTime|date:'d M Y' }} {% endblock tabl_date %}
-         {% block tabl_author %} {{ msg.author }} {% endblock tabl_author %}
-         {% block tabl_text %} {{ msg.messageText|truncatewords:20 }} {% endblock tabl_text %}
-         {% block tabl_category %} {{ msg.get_messageCategory_display() }} {% endblock tabl_category %}
-     {% endfor %}
-{% endif %}
-{% block pagination %}
-    {% if is_paginated %}
-        {% if page_obj.has_previous %}
-            <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="First" href="?page=1">First</a>
-            <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Previous"
-                href="?page={{ page_obj.previous_page_number }}"><<<
-            </a>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <a class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple">{{ num }}</a>
-            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                <a class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple" href="?page={{ num }}">{{ num }}</a>
-            {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Next" href="?page={{ page_obj.next_page_number }}">>>></a>
-            <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Last" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-        {% endif %}
-    {% else %}
-        <h3>Сообщений нет!</h3>
-    {% endif %}
-{% endblock pagination %}
-
-
