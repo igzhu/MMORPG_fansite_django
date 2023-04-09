@@ -54,8 +54,8 @@ class Message(models.Model):
     def get_absolute_url(self):  # auto move to page after the Message creation
         return f'/messages/{self.id}
 
-    #def __repr__(self):
-    #    return f'{self.get_messageCategory_display()}'
+    def __str__(self):
+        return f'{self.messageTitle}'
 
 
 class Post(models.Model):

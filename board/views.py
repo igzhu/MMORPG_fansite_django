@@ -5,6 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.core.mail.message import EmailMultiAlternatives
 import random
@@ -32,7 +33,7 @@ class MessageList(ListView):
 
 
 class MessageDetails(DetailView):
-    template_name = 'message_detail.html'
+    template_name = 'message_details.html'
     queryset = Message.objects.all()
 
 
@@ -45,7 +46,6 @@ class MessageAdd(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     #     context = super().get_context_data(**kwargs)
     #     context['form'] = MessageForm()
     #     return context
-
 
 
 class MessageEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -84,6 +84,11 @@ class PostList(LoginRequiredMixin, ListView):
         context['membs_total'] = Member.count_members()
         context['psts_total'] = Post.count_posts()
         return context
+
+
+class PostDetailsView(DetailView):
+    template_name = 'post_details.html'
+    queryset = Message.objects.all()
 
 
 class PostDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -126,6 +131,35 @@ def respond_to_message(request, pk):
         return redirect('')
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
+def approve_post(request, pk):
+    pos = Post.objects.get(id=pk)
+    pos.accept()
+    pos_author = pos.postAuthor
+    pos_text = pos.postText[:20]
+
+    email = pos_author.email
+    approve_html = render_to_string(
+          'board/email/accept_post.html',
+          {'post': pos_text,
+           "to_msg": self.postToMessage}
+          )
+    msg = EmailMultiAlternatives(
+        subject=f'"{pos_texte}" accepted',
+        body=f'{pos_texte} accepted',
+        from_email=DEFAULT_FROM_EMAIL,
+        to=[email, ]
+    )
+
+    msg.attach_alternative(html, 'text/html')
+    try:
+        msg.send()
+    except Exception as e:
+        print(e)
+        return redirect('')
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
 def usual_login_view(request):
     username = request.POST['username']
     password = request.POST['password']
@@ -137,6 +171,7 @@ def usual_login_view(request):
         # redirect to
     else:
         return redirect('invalid logon/')
+
 
 def login_with_code_view(request):
     username = request.POST['username']
