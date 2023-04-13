@@ -12,7 +12,7 @@ DEFAULT_FROM_EMAIL = settings.DEFAULT_FROM_EMAIL
 @receiver(post_save, sender=Post)
 def notify_about_new_post(sender, instance, created, **kwargs):
     if created:
-        email_subject = f'{instance.postText[:12]}... was submitted at {instance.postDateTime.strftime("%b %d %Y %H:%M:%S")}'
+        email_subject = f'Отклик "{instance.postText[:12]}..." was submitted at {instance.postDateTime.strftime("%b %d %Y %H:%M:%S")}'
         email_html_body = render_to_string(
             template_name='board/email/post_created.html',
             context={
@@ -24,7 +24,7 @@ def notify_about_new_post(sender, instance, created, **kwargs):
             subject=email_subject,
             body='',
             from_email=DEFAULT_FROM_EMAIL,
-            to=[instance.messageAuthor.email, ]
+            to=[instance.postToMessage.author.email, ]
         )
     else:
         email_subject = f'{instance.postText[:12]}... was approved at {datetime.now().strftime("%b %d %Y %H:%M:%S")}'

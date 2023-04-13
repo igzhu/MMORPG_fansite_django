@@ -1,7 +1,7 @@
 {% extends 'flatpages/default.html' %}
- 
+{% load static %}
 {% block title %}
-Публикации
+Messages
 {% endblock title %}
 
 {% block content %}
@@ -91,7 +91,7 @@
                   <p
                     class="text-lg font-semibold text-gray-700 dark:text-gray-200"
                   >
-                    {{ psts_total_total }}
+                    {{ psts_total }}
                   </p>
                 </div>
               </div>
@@ -119,12 +119,12 @@
                   {% for msg in messages %}
                     <tr class="text-gray-700 dark:text-gray-400">
                       <td class="px-4 py-3 text-sm">
-                        <a href="{% url 'message_details' msg.id %}">{{ msg.messageTitle|truncatewords:12 }}</a>
+                        <a href="{% url 'message_details' msg.id %}"><u>{{ msg.messageTitle|truncatewords:12 }}</u></a>
                         <a href="{% url 'message_edit' msg.id %}"><u>Редактировать</u></a>
                         <a href="{% url 'message_delete' msg.id %}"><u>Удалить</u></a>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ msg.messsgeDateTime|date:'d M Y' }}
+                        {{ msg.messageDateTime|date:'d M Y' }}
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex items-center text-sm">
@@ -142,7 +142,7 @@
                             ></div>
                           </div>
                           <div>
-                            <p class="font-semibold">{{{ msg.author.username }}</p>
+                            <p class="font-semibold">{{ msg.author.username }}</p>
                           </div>
                         </div>
                       </td>
@@ -150,14 +150,15 @@
                         {{ msg.messageText|truncatewords:20 }}
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ msg.get_messageCategory_display() }}
+                        {{ msg.get_messageCategory_display }}
                       </td>
                     </tr>
                   {% endfor %}
                   </tbody>
                 </table>
                 {% else %}
-                  <h3>Сообщений нет!</h3>
+                  <h3 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                     Сообщений нет!</h3>
                 {% endif %}
               </div>
               <div
@@ -185,7 +186,7 @@
                           <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Last" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
                         {% endif %}
                       {% endif %}
-                    </div>div>
+                    </div>
                   </nav>
                 </span>
               </div>

@@ -1,5 +1,5 @@
-{% extends 'flatpages/msg_details.html' %}
-
+{% extends 'flatpages/default.html' %}
+{% load static %}
 {% block title %}Delete post{% endblock title %}
 
 {% block content %}
@@ -29,10 +29,10 @@
                   >
                     <tr class="text-gray-700 dark:text-gray-400">
                       <td class="px-4 py-3 text-sm">
-                        {{pst.postText }}
+                        {{post.postText }}
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ pst.postDateTime|date:'d M Y' }}
+                        {{ post.postDateTime|date:'d M Y' }}
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex items-center text-sm">
@@ -50,12 +50,12 @@
                             ></div>
                           </div>
                           <div>
-                            <p class="font-semibold">{{{ pst.postAuthor.username }}</p>
+                            <p class="font-semibold">{{ post.postAuthor.username }}</p>
                           </div>
                         </div>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        {{ pst.postAccepted }}
+                        {{ post.postAccepted }}
                       </td>
                     </tr>
                </tbody>
@@ -71,7 +71,7 @@
                       <form class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Confirm" method="POST">
                         {% csrf_token %}
                         <input type="submit" value="Подтвердить"></form>
-                    </div>div>
+                    </div>
                   </nav>
                 </span>
             </div>

@@ -69,8 +69,8 @@ MIDDLEWARE = [
 ]
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = ''
-LOGOUT_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 SITE_ID = 1
 ROOT_URLCONF = 'fan_site.urls'
 

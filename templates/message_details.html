@@ -1,5 +1,5 @@
-{% extends 'flatpages/msg_details.html' %}
- 
+{% extends 'flatpages/default.html' %}
+{% load static %}
 {% block title %}Message details{% endblock title %}
 
 {% block content %}
@@ -25,7 +25,7 @@
                   <br>
                   <img src="{{ message.messageImage }}" alt=”img” width="400" height="300">
                 </p>
-              {% endif %}}
+              {% endif %}
               {% if message.messageVideo %}
                 <p class="text-gray-600 dark:text-gray-400">
                   <br>
@@ -33,7 +33,7 @@
                     Doesn't support this media type.
                   </video>
                 </p>
-              {% endif %}}
+              {% endif %}
             </div>
             {%  if user != message.author %}
               <div>
@@ -99,7 +99,7 @@
           </button>
         </header>
         <!-- Modal body -->
-        <form class="text-sm text-gray-700 dark:text-gray-400" action="<a href="{% url 'respond' message.id %}"" method="POST">
+        <form class="text-sm text-gray-700 dark:text-gray-400" action="{% url 'respond' message.id %}" method="POST">
           {% csrf_token %}
           <div class="mt-4 mb-6">
             <!-- Modal title -->

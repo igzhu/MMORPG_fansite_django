@@ -1,3 +1,4 @@
+import django_filters as filters
 from django_filters import FilterSet
 #from django import forms
 #from django.db import models
@@ -6,15 +7,15 @@ from django_filters import FilterSet
 from .models import Post
 
 class PostFilter(FilterSet):
+    postToMessage__messageTitle = filters.CharFilter(label='фильтр по cообщению:')
 
     class Meta:
         model = Post
         fields = {
-            'postToMessage__messageTitle': ['icontains', ],
+        #    'postToMessage__messageTitle': ['icontains', ],
             'postDateTime': [],
-            'posText': [],
-            'postAuthor': []
+            'postText': [],
+            'postAuthor': [],
             'postAccepted': [],
-            # 'postAuthor__authorName__username': ['icontains'],
         }
 

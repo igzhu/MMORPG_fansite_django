@@ -1,7 +1,7 @@
 {% extends 'flatpages/default.html' %}
-
+{% load static %}
 {% block title %}
-posts on my messages
+Posts for me
 {% endblock title %}
 
 {% block content %}
@@ -10,7 +10,7 @@ posts on my messages
             <h2
               class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
             >
-              Общий раздел
+              Отклики
             </h2>
             <!-- Cards -->
             <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
@@ -91,7 +91,7 @@ posts on my messages
                   <p
                     class="text-lg font-semibold text-gray-700 dark:text-gray-200"
                   >
-                    {{ psts_total_total }}
+                    {{ psts_total }}
                   </p>
                 </div>
               </div>
@@ -101,9 +101,11 @@ posts on my messages
             <div class="w-full overflow-hidden rounded-lg shadow-xs">
               <div class="w-full overflow-x-auto">
                 {% if posts %}
-                <form class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800" method="GET">
+                <form class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700
+                 bg-gray-50 dark:text-gray-400 dark:bg-gray-800" method="GET">
                   {{ filter.form }}
-                  <input type="submit" value="Найти">
+                  <input class="block w-full pl-20 mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700
+                       focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" type="submit" value="Найти">
                 </form>
                 <table class="w-full whitespace-no-wrap">
                   <thead>
@@ -144,12 +146,12 @@ posts on my messages
                             ></div>
                           </div>
                           <div>
-                            <p class="font-semibold">{{{ pst.postAuthor.username }}</p>
+                            <p class="font-semibold">{{ pst.postAuthor.username }}</p>
                           </div>
                         </div>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        <a href="{% url 'post_details' pst.id %}">{{ pst.postText|truncatewords:20 }}</a>
+                        <a href="{% url 'post_details' pst.id %}"><u>У{{ pst.postText|truncatewords:20 }}</u></a>
                         <a href="{% url 'post_delete' pst.id %}"><u>Удалить</u></a>
                       </td>
                       <td class="px-4 py-3 text-sm">
@@ -160,7 +162,8 @@ posts on my messages
                   </tbody>
                 </table>
                 {% else %}
-                  <h3>Откликов нет!</h3>
+                  <h3 class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                     Откликов нет!</h3>
                 {% endif %}
               </div>
               <div
@@ -188,7 +191,7 @@ posts on my messages
                           <a class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Last" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
                         {% endif %}
                       {% endif %}
-                    </div>div>
+                    </div>
                   </nav>
                 </span>
               </div>
