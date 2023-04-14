@@ -10,6 +10,9 @@
  
 ===========================================================================
 
+![image](https://user-images.githubusercontent.com/115280573/232076590-0ce260f1-d9a9-4c15-be93-c7e49689a25e.png)
+
+
 The site for MMORPG fans, but not only. Can be applied and used by similar communities.
 Contemporary set of web elements (dark/light themes, "hamburger", user logged badge,
 modal windows), also with great functionality like auth/registration with e-mail confirmation, messages, replies on it, e-mail 
