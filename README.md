@@ -11,3 +11,4 @@ The site for MMORPG fans, but not only. Can be applied and used by similar commu
 Contemporary set of web elements (dark/light themes, "hamburger", user logged badge,
 modal windows), also with great functionality like messages, replies on it, e-mail 
 notification about actions and events, newsletters by time interval or by once.
+
