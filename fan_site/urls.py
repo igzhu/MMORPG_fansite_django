@@ -23,4 +23,4 @@ urlpatterns = [
     #path('', include('django.contrib.flatpages.urls')),
     path('', include('board.urls')),
     path('accounts/', include('allauth.urls')),
-] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

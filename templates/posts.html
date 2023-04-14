@@ -151,7 +151,7 @@ Posts for me
                         </div>
                       </td>
                       <td class="px-4 py-3 text-sm">
-                        <a href="{% url 'post_details' pst.id %}"><u>У{{ pst.postText|truncatewords:20 }}</u></a>
+                        <a href="{% url 'post_details' pst.id %}"><u>{{ pst.postText|truncatewords:20 }}</u></a>
                         <a href="{% url 'post_delete' pst.id %}"><u>Удалить</u></a>
                       </td>
                       <td class="px-4 py-3 text-sm">

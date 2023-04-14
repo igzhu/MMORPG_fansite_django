@@ -164,8 +164,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
+#MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 
 EMAIL_HOST = config('EMAIL_HOST')       # 'smtp.yandex.ru'
 EMAIL_PORT = config('EMAIL_PORT')      #465

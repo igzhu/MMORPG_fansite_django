@@ -68,9 +68,12 @@
                 <span class="flex col-span-4 mt-2 sm:mt-auto sm:justify-end">
                   <nav aria-label="Table navigation">
                     <div class="inline-flex items-center">
-                      <form class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple" aria-label="Confirm" method="POST">
+                      <form class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
+                            aria-label="Confirm" method="POST">
                         {% csrf_token %}
-                        <input type="submit" value="Подтвердить"></form>
+                        <input class="block w-full pl-20 mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700
+                       focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
+                         type="submit" value="Подтвердить"></form>
                     </div>
                   </nav>
                 </span>

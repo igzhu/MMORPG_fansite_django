@@ -14,8 +14,5 @@ urlpatterns = [
     path('posts/<int:pk>/', PostDetails.as_view(), name='post_details'),
     path('posts/<int:pk>/delete/', PostDelete.as_view(), name='post_delete'),
     path('posts/<int:pk>/approve/', approve_post, name='post_approve'),
-    path('<int:pk>/respond/', respond_to_message, name='respond'),  # реализовано также в signals.py.
-                                                                    # здесь нужно для модального окна в message_details.html
-    #path('category/<int:pk>/subscribe/', subscribe_to_category, name='subscribe'),
-    #path('category/<int:pk>/', PostCategoryView.as_view(), name='category'),
+    path('<int:pk>/respond/', respond_to_message, name='respond'),
 ]

@@ -43,13 +43,13 @@ class MessageAdd(LoginRequiredMixin, CreateView):
     template_name = 'message_add.html'
     form_class = MessageForm
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = MessageForm()
+        context['form'] = MessageForm(self.request.POST or None, self.request.FILES or None)
         return context
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(self.request.POST)
+        form = self.form_class(self.request.POST or None, self.request.FILES or None)
 
         if form.is_valid():
             user = self.request.user
@@ -80,12 +80,11 @@ class PostList(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'posts.html'
     context_object_name = 'posts'
-    # queryset = Post.objects.filter(author=request.user).order_by('-postDateTime')
-    paginate_by = 7
+    paginate_by = 6
 
     def get_queryset(self):
         user = self.request.user
-        queryset = super().get_queryset().filter(postAuthor=user).order_by('-postDateTime')
+        queryset = super().get_queryset().filter(postToMessage__author=user).order_by('-postDateTime')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -115,11 +114,12 @@ def respond_to_message(request, pk):
     msg = Message.objects.get(id=pk)
     postAuthor = request.user
     postToMessage = msg
-    postText = request.POST['response']
+    postText = request.POST.get('response', 'nope')
 
     resp = Post(postAuthor=postAuthor, postToMessage=postToMessage, postText=postText)
     resp.save()
-
+    return redirect('/')
+    """  отправка email перенесенa в signals.py
     email = msg.author.email
     html = render_to_string(
           'board/email/response_submitted.html',
@@ -141,6 +141,7 @@ def respond_to_message(request, pk):
         return redirect('')
     return redirect('/posts')
     # return redirect(request.META.get('HTTP_REFERER'))
+    """
 
 
 @login_required
@@ -148,6 +149,9 @@ def approve_post(request, pk):
     pos = Post.objects.get(id=pk)
     # pos.accept()
     pos.postAccepted = True
+    pos.save()
+    return redirect('/posts')
+    """  отправка email перенесенa в signals.py
     pos_author = pos.postAuthor
     pos_text = pos.postText[:20]
 
@@ -171,7 +175,7 @@ def approve_post(request, pk):
         print(e)
     return redirect('/posts')
     # return redirect(request.META.get('HTTP_REFERER'))
-
+"""
 
 def usual_login_view(request):
     username = request.POST['username']

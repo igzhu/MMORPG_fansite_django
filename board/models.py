@@ -1,17 +1,8 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 
-
-# class Member(models.Model):
-#    memberName = models.OneToOneField(User, on_delete=models.CASCADE)
-
-#    def __str__(self):
-#        return f'{self.memberName.username}'
-
-#    def count_members(self):
-#        members_total = self.objects.all().count()
-#        return members_total
-
+MEDIA_ROOT = settings.MEDIA_ROOT
 
 tank = 'TANK'
 healer = 'HEAL'
@@ -43,7 +34,9 @@ class Message(models.Model):
     messageText = models.TextField()
     # messageImageFiles = models.FilePathField(path=images_path)
     # messageVideoFiles = models.FilePathField(path=videos_path)
+    imageName = models.CharField(max_length=15, default='image')
     messageImage = models.ImageField(upload_to='images/', null=True, blank=True, verbose_name="")
+    imageVideo = models.CharField(max_length=15, default='video')
     messageVideo = models.FileField(upload_to='videos/', null=True, blank=True, verbose_name="")
     messageCategory = models.CharField(max_length=4, choices=msg_types, default=damage_dealer)
 
@@ -52,7 +45,7 @@ class Message(models.Model):
     #     return pubs_total
 
     def get_absolute_url(self):  # auto move to page after the Message creation
-        return f'/messages/{self.id}'
+        return f'/{self.id}'
 
     def __str__(self):
         return f'{self.messageTitle}'
@@ -66,9 +59,9 @@ class Post(models.Model):
     postAccepted = models.BooleanField(default=False)
     postDateTime = models.DateTimeField(auto_now_add=True)
 
-    def accept(self):
-        self.postAccepted = True
-        self.save()
+    # def accept(self):
+    #    self.postAccepted = True
+    #    self.save()
 
     def get_absolute_url(self):  # auto move to page after the Post creation
         return f'/posts/{self.id}'

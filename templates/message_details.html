@@ -18,18 +18,19 @@
                 <span>{{ message.messageDateTime }}</span>, <span>{{ message.author }}</span>
               </p>
               <p class="text-gray-600 dark:text-gray-400">
+                <br>
                 {{ message.messageText }}
               </p>
               {% if message.messageImage %}
                 <p class="text-gray-600 dark:text-gray-400">
                   <br>
-                  <img src="{{ message.messageImage }}" alt=”img” width="400" height="300">
+                  <img src="{{ MEDIA_URL }}{{ message.messageImage }}" alt=”img” width="400" height="300">
                 </p>
               {% endif %}
               {% if message.messageVideo %}
                 <p class="text-gray-600 dark:text-gray-400">
                   <br>
-                  <video src="{{ message.messageImage }}" type='video/mp4' controls>
+                  <video  controls> <source src="{{ MEDIA_URL }}{{ message.messageVideo }}" type="video/mp4"/>
                     Doesn't support this media type.
                   </video>
                 </p>
