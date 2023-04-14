@@ -9,6 +9,6 @@
 
 The site for MMORPG fans, but not only. Can be applied and used by similar communities.
 Contemporary set of web elements (dark/light themes, "hamburger", user logged badge,
-modal windows), also with great functionality like auth/reg with e-mail confirmatin, messages, replies on it, e-mail 
+modal windows), also with great functionality like auth/registration with e-mail confirmation, messages, replies on it, e-mail 
 notification about actions and events, newsletters by time interval or by once.
 
