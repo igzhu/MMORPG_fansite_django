@@ -22,7 +22,7 @@ class MessageList(ListView):
     template_name = 'messages.html'
     context_object_name = 'messages'
     queryset = Message.objects.order_by('-messageDateTime')
-    paginate_by = 8
+    paginate_by = 7
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
